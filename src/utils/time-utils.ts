@@ -1,4 +1,14 @@
-const countdownUntil = (msTimestamp: number, initialDate?: number) => {
+type CountdownObject = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+const countdownUntil = (
+  msTimestamp: number,
+  initialDate?: number,
+): CountdownObject => {
   const currentDate = initialDate || new Date().getTime();
   const futureDate = new Date(msTimestamp).getTime();
   let delta = Math.abs((futureDate - currentDate) / 1000);

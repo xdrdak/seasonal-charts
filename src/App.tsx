@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled, { injectGlobal } from 'styled-components';
+import DevTools from 'mobx-react-devtools';
 import SeasonalShowList from './components/SeasonalShowList';
 
 enum Season {
@@ -37,6 +38,8 @@ class App extends React.Component {
           seasonYear={2018}
           format={Format.tv}
         />
+
+        <DevTools />
       </Container>
     );
   }

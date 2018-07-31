@@ -1,4 +1,4 @@
-interface MediaItem {
+type MediaItem = {
   id: number;
   coverImage: {
     large?: string;
@@ -10,4 +10,8 @@ interface MediaItem {
   nextAiringEpisode: {
     airingAt: number;
   };
-}
+  streamingEpisodes: Array<{
+    site?: string;
+    url?: string;
+  }>;
+};

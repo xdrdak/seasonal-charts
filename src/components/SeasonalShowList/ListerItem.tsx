@@ -1,9 +1,9 @@
-/// <reference path="./index.d.ts" />
 import * as React from 'react';
 import styled from 'styled-components';
 import LazyLoad from 'react-lazyload';
-import { Heading, Relative, Button, Absolute } from 'rebass';
+import { Heading, Relative, Absolute, Link, Circle, Flex } from 'rebass';
 
+import TrackButton from './TrackButton';
 import Card from '../Card';
 import AspectRatioImage from '../AspectRatioImage';
 import { countdownUntil } from '../../utils/time-utils';
@@ -12,10 +12,29 @@ const CardSubtitle = styled(Heading)`
   font-style: italic;
 `;
 
-interface ListerItemProps {
+const EpisodeLink = styled(Link)`
+  text-decoration: none;
+  font-size: 1.2rem;
+`;
+
+const EpisodeLinkCircle = styled(Circle)`
+  display: flex;
+  justify-content: center;
+  transition: background-color ease-in-out 100ms;
+  &:hover {
+    background-color: #85b7f9;
+  }
+`;
+
+interface Props {
   mediaItem: MediaItem;
+  mediaItemStore?: any;
 }
-class ListerItem extends React.Component<ListerItemProps> {
+class ListerItem extends React.Component<Props> {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     const { mediaItem } = this.props;
     // Airing at uses seconds, not milliseconds.
@@ -36,13 +55,32 @@ class ListerItem extends React.Component<ListerItemProps> {
           <Heading fontSize={2} mb={1}>
             {mediaItem.title.romaji}
           </Heading>
+
           {mediaItem.title.english && (
             <CardSubtitle fontSize={1} mb={3} fontWeight={'lighter'}>
               {mediaItem.title.english}
             </CardSubtitle>
           )}
+
+          <Flex my={2} justifyContent="center">
+            {mediaItem.streamingEpisodes.map((episode, index) => (
+              <div key={`${mediaItem.id}_${index}`}>
+                <EpisodeLinkCircle size="32px">
+                  <EpisodeLink
+                    color="white"
+                    href={episode.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {index}
+                  </EpisodeLink>
+                </EpisodeLinkCircle>
+              </div>
+            ))}
+          </Flex>
+
           <Absolute top={5} right={5}>
-            <Button>track</Button>
+            <TrackButton id={this.props.mediaItem.id} />
           </Absolute>
         </Relative>
       </Card>

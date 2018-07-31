@@ -1,22 +1,28 @@
-import { observable } from 'mobx';
+import { observable, action, reaction, computed, IObservableArray } from 'mobx';
+import { saveMediaItems } from '../utils/localstorage-utils';
 
 class MediaItemsStore {
-  @observable mediaItems = {};
+  @observable mediaItems: IObservableArray<number>;
+  autoSaveDisposer = null;
 
-  constructor() {}
-
-  trackItem(id) {
-    this.mediaItems = {
-      ...this.mediaItems,
-      [id]: {
-        id,
-        tracked: true,
+  constructor(initialMediaItems: Array<number> = []) {
+    this.mediaItems = observable(initialMediaItems);
+    this.autoSaveDisposer = reaction(
+      () => this.mediaItems.length,
+      () => {
+        saveMediaItems(this.mediaItems);
       },
-    };
+    );
   }
 
-  untrackItem(id) {
-    delete this.mediaItems[id];
+  @action.bound
+  trackItem(id: number) {
+    this.mediaItems.push(id);
+  }
+
+  @action.bound
+  untrackItem(id: number) {
+    this.mediaItems.remove(id);
   }
 }
 

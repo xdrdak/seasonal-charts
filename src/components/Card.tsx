@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-export interface CardProps {
+interface Props {
   children?: any;
 }
 
@@ -17,7 +17,7 @@ const Content = styled.div`
   text-align: center;
 `;
 
-const Card: React.SFC<CardProps> = ({ children }) => (
+const Card: React.SFC<Props> = ({ children }) => (
   <Wrapper>
     <Content>{children}</Content>
   </Wrapper>

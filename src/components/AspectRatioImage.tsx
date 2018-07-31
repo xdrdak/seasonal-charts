@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-export interface ComponentProps {
+interface Props {
   imgUrl?: string;
 }
 
@@ -20,11 +20,11 @@ const AspectRatioObject = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: ${(props: ComponentProps) => `url(${props.imgUrl})`} top center;
+  background: ${(props: Props) => `url(${props.imgUrl})`} top center;
   background-size: cover;
 `;
 
-const AspectRatioImage: React.SFC<ComponentProps> = ({ imgUrl }) => (
+const AspectRatioImage: React.SFC<Props> = ({ imgUrl }) => (
   <Wrapper>
     <AspectRatioObject imgUrl={imgUrl} />
   </Wrapper>

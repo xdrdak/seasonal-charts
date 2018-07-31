@@ -5,24 +5,24 @@ import { Query } from 'react-apollo';
 import Lister from './Lister';
 import { QUERY_SEASONAL_SHOWS } from '../../graphql/graphql-queries';
 
-interface QueryData {
+interface IQueryData {
   Page: {
     media: Array<MediaItem>;
   };
 }
-interface QueryVariables {
+interface IQueryVariables {
   season: string;
   seasonYear: number;
   format: string;
 }
-class SeasonalShowQuery extends Query<QueryData, QueryVariables> {}
-interface SeasonalShowListProps {
+class SeasonalShowQuery extends Query<IQueryData, IQueryVariables> {}
+interface ISeasonalShowListProps {
   season: string;
   seasonYear: number;
   format: string;
 }
 
-const SeasonalShowList: React.SFC<SeasonalShowListProps> = ({
+const SeasonalShowList: React.SFC<ISeasonalShowListProps> = ({
   season,
   seasonYear,
   format,

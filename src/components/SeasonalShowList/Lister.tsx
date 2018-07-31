@@ -1,6 +1,7 @@
-/// <reference path="./index.d.ts" />
 import * as React from 'react';
 import styled from 'styled-components';
+import { computed } from 'mobx';
+import { inject, observer } from 'mobx-react';
 import { Box, Flex } from 'rebass';
 import { forceCheck } from 'react-lazyload';
 
@@ -8,11 +9,22 @@ import ListerItem from './ListerItem';
 import BaseSelect from '../BaseSelect';
 import CardGrid from '../CardGrid';
 
-const FormBox = styled(Box).attrs({ mb: 2 })``;
+enum FilterBy {
+  Tracked = 'tracked',
+  Untracked = 'untracked',
+}
+
 enum SortOrder {
   Ascending = 'ascending',
   Descending = 'descending',
 }
+
+enum SortType {
+  Airing = 'airing',
+  Alphabetical = 'alphabetical',
+}
+
+const FormBox = styled(Box).attrs({ mb: 2 })``;
 
 function sortByAlphabetical(a: MediaItem, b: MediaItem) {
   return a.title.romaji.localeCompare(b.title.romaji);
@@ -30,19 +42,19 @@ const swapParams = (doSwap: boolean) => (
 
 const sortingStrategy = (
   arr: Array<MediaItem>,
-  strategy: string = 'airing',
+  strategy: string = SortType.Airing,
   sortOrder: string = SortOrder.Ascending,
 ) => {
   const cloneArr: Array<MediaItem> = [...arr];
-  const sortOrderFunc = swapParams(sortOrder === 'descending');
+  const sortOrderFunc = swapParams(sortOrder === SortOrder.Descending);
   let sortFunction = null;
 
   switch (strategy) {
-    case 'alphabetical':
+    case SortType.Alphabetical:
       sortFunction = (a: MediaItem, b: MediaItem) =>
         sortOrderFunc(a, b, sortByAlphabetical);
       break;
-    case 'airing':
+    case SortType.Airing:
     default:
       sortFunction = (a: MediaItem, b: MediaItem) =>
         sortOrderFunc(a, b, sortByAiringTime);
@@ -52,26 +64,33 @@ const sortingStrategy = (
   return cloneArr.sort(sortFunction);
 };
 
-interface ListerState {
+interface State {
   sortType: string;
   sortOrder: string;
   filter: string;
 }
-interface ListerProps {
+interface Props {
   mediaItems: Array<MediaItem>;
+  mediaItemStore?: any;
 }
 
-class Lister extends React.Component<ListerProps, ListerState> {
+@inject('mediaItemStore')
+@observer
+class Lister extends React.Component<Props, State> {
   state = {
-    sortType: 'airing',
+    sortType: SortType.Airing,
     sortOrder: SortOrder.Ascending,
-    filter: 'tracked',
+    filter:
+      window.location.pathname === '/tracked'
+        ? FilterBy.Tracked
+        : FilterBy.Untracked,
   };
 
-  constructor(props: ListerProps) {
+  constructor(props: Props) {
     super(props);
     this.changeSortType = this.changeSortType.bind(this);
     this.changeSortOrder = this.changeSortOrder.bind(this);
+    this.changeFilterType = this.changeFilterType.bind(this);
   }
 
   changeSortType(event: React.FormEvent<HTMLSelectElement>) {
@@ -84,12 +103,33 @@ class Lister extends React.Component<ListerProps, ListerState> {
     this.setState({ sortOrder }, forceCheck);
   }
 
+  changeFilterType(event: React.FormEvent<HTMLSelectElement>) {
+    const filter = event.currentTarget.value;
+    this.setState({ filter }, () => {
+      forceCheck();
+      history.pushState(null, null, filter);
+    });
+  }
+
+  @computed
+  get filteredMediaItems() {
+    const trackedItems: Array<number> = this.props.mediaItemStore.mediaItems;
+    if (this.state.filter === FilterBy.Untracked) {
+      return this.props.mediaItems;
+    }
+
+    return this.props.mediaItems.filter(
+      ({ id }) => trackedItems.indexOf(id) >= 0,
+    );
+  }
+
   render() {
     const sortedMediaItems = sortingStrategy(
-      this.props.mediaItems,
+      this.filteredMediaItems,
       this.state.sortType,
       this.state.sortOrder,
     );
+
     return (
       <div>
         <Flex justifyContent="space-between">
@@ -101,8 +141,8 @@ class Lister extends React.Component<ListerProps, ListerState> {
               onChange={this.changeSortType}
               value={this.state.sortType}
             >
-              <option value="alphabetical">Alphabetical</option>
-              <option value="airing">Airing Date</option>
+              <option value={SortType.Alphabetical}>Alphabetical</option>
+              <option value={SortType.Airing}>Airing Date</option>
             </BaseSelect>
 
             <BaseSelect
@@ -118,9 +158,14 @@ class Lister extends React.Component<ListerProps, ListerState> {
 
           <FormBox>
             <label htmlFor="filterBy">Filter By:&nbsp;</label>
-            <BaseSelect id="filterBy" name="filterBy">
-              <option value="tracked">Tracked</option>
-              <option value="untracked">Untracked</option>
+            <BaseSelect
+              id="filterBy"
+              name="filterBy"
+              onChange={this.changeFilterType}
+              value={this.state.filter}
+            >
+              <option value={FilterBy.Untracked}>Untracked</option>
+              <option value={FilterBy.Tracked}>Tracked</option>
             </BaseSelect>
           </FormBox>
         </Flex>
