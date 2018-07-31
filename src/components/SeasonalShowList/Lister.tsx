@@ -12,6 +12,7 @@ import CardGrid from '../CardGrid';
 enum FilterBy {
   Tracked = 'tracked',
   Untracked = 'untracked',
+  None = 'none',
 }
 
 enum SortOrder {
@@ -80,11 +81,7 @@ class Lister extends React.Component<Props, State> {
   state = {
     sortType: SortType.Airing,
     sortOrder: SortOrder.Ascending,
-    // this is ghetto as heck, should be stored in localstorage
-    filter:
-      window.location.pathname === '/tracked'
-        ? FilterBy.Tracked
-        : FilterBy.Untracked,
+    filter: FilterBy.None,
   };
 
   constructor(props: Props) {
@@ -106,10 +103,7 @@ class Lister extends React.Component<Props, State> {
 
   changeFilterType(event: React.FormEvent<HTMLSelectElement>) {
     const filter = event.currentTarget.value;
-    this.setState({ filter }, () => {
-      forceCheck();
-      history.pushState(null, null, filter);
-    });
+    this.setState({ filter }, forceCheck);
   }
 
   @computed
@@ -165,15 +159,15 @@ class Lister extends React.Component<Props, State> {
           </FormBox>
 
           <FormBox>
-            <label htmlFor="filterBy">Filter By:&nbsp;</label>
             <BaseSelect
               id="filterBy"
               name="filterBy"
               onChange={this.changeFilterType}
               value={this.state.filter}
             >
-              <option value={FilterBy.Untracked}>Untracked</option>
-              <option value={FilterBy.Tracked}>Tracked</option>
+              <option value={FilterBy.None}>All shows</option>
+              <option value={FilterBy.Tracked}>Tracked Only</option>
+              <option value={FilterBy.Untracked}>Untracked Only</option>
             </BaseSelect>
           </FormBox>
         </Flex>
