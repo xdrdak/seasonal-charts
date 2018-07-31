@@ -72,7 +72,7 @@ class ListerItem extends React.Component<Props> {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {index}
+                    {index + 1}
                   </EpisodeLink>
                 </EpisodeLinkCircle>
               </div>

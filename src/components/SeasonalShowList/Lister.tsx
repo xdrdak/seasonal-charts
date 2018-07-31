@@ -80,6 +80,7 @@ class Lister extends React.Component<Props, State> {
   state = {
     sortType: SortType.Airing,
     sortOrder: SortOrder.Ascending,
+    // this is ghetto as heck, should be stored in localstorage
     filter:
       window.location.pathname === '/tracked'
         ? FilterBy.Tracked
@@ -114,13 +115,20 @@ class Lister extends React.Component<Props, State> {
   @computed
   get filteredMediaItems() {
     const trackedItems: Array<number> = this.props.mediaItemStore.mediaItems;
+
     if (this.state.filter === FilterBy.Untracked) {
-      return this.props.mediaItems;
+      return this.props.mediaItems.filter(
+        ({ id }) => trackedItems.indexOf(id) === -1,
+      );
     }
 
-    return this.props.mediaItems.filter(
-      ({ id }) => trackedItems.indexOf(id) >= 0,
-    );
+    if (this.state.filter === FilterBy.Tracked) {
+      return this.props.mediaItems.filter(
+        ({ id }) => trackedItems.indexOf(id) >= 0,
+      );
+    }
+
+    return this.props.mediaItems;
   }
 
   render() {
