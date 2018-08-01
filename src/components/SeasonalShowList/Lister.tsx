@@ -32,7 +32,11 @@ function sortByAlphabetical(a: MediaItem, b: MediaItem) {
 }
 
 function sortByAiringTime(a: MediaItem, b: MediaItem) {
-  return a.nextAiringEpisode.airingAt - b.nextAiringEpisode.airingAt;
+  if (a.nextAiringEpisode && b.nextAiringEpisode) {
+    return a.nextAiringEpisode.airingAt - b.nextAiringEpisode.airingAt;
+  }
+
+  return 0;
 }
 
 const swapParams = (doSwap: boolean) => (
@@ -171,12 +175,15 @@ class Lister extends React.Component<Props, State> {
             </BaseSelect>
           </FormBox>
         </Flex>
-
-        <CardGrid>
-          {sortedMediaItems.map(media => (
-            <ListerItem key={media.id} mediaItem={media} />
-          ))}
-        </CardGrid>
+        {sortedMediaItems.length ? (
+          <CardGrid>
+            {sortedMediaItems.map(media => (
+              <ListerItem key={media.id} mediaItem={media} />
+            ))}
+          </CardGrid>
+        ) : (
+          "	╮(￣～￣)╭ There's nothing here!"
+        )}
       </div>
     );
   }
