@@ -29,7 +29,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <Container mb={3} maxWidth={['1024px', '1440px']}>
+      <Container mb={3} maxWidth={['960px', '1024px', '1600px']}>
         <Flex justifyContent="center" my={4}>
           <TextLogo />
         </Flex>
