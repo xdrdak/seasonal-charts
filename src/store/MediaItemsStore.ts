@@ -1,9 +1,17 @@
-import { observable, action, reaction, computed, IObservableArray } from 'mobx';
+import { observable, action, reaction, IObservableArray } from 'mobx';
 import { saveMediaItems } from '../utils/localstorage-utils';
 
-class MediaItemsStore {
+export interface IMediaItemsStore {
+  mediaItems: IObservableArray<number>;
+  autoSaveDisposer: Function;
+  trackItem(id: number);
+  untrackItem(id: number);
+  dispose();
+}
+
+class MediaItemsStore implements IMediaItemsStore {
   @observable mediaItems: IObservableArray<number>;
-  autoSaveDisposer = null;
+  autoSaveDisposer: Function = null;
 
   constructor(initialMediaItems: Array<number> = []) {
     this.mediaItems = observable(initialMediaItems);
@@ -23,6 +31,10 @@ class MediaItemsStore {
   @action.bound
   untrackItem(id: number) {
     this.mediaItems.remove(id);
+  }
+
+  dispose() {
+    this.autoSaveDisposer();
   }
 }
 

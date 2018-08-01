@@ -1,7 +1,19 @@
 import * as React from 'react';
-import { Button } from 'rebass';
+import styled from 'styled-components';
+import { lighten } from 'polished';
+import { ButtonCircle } from 'rebass';
 import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
+
+import Icon from '../IonIcons';
+
+const FavButton = styled(ButtonCircle).attrs({ bg: 'hot-pink' })`
+  transition: background-color ease-in-out 200ms;
+  cursor: pointer;
+  &:hover {
+    background-color: ${props => lighten(0.2, '#ff41b4')};
+  }
+`;
 
 interface Props {
   id: number;
@@ -37,13 +49,13 @@ class TrackButton extends React.Component<Props> {
 
   render() {
     return this.isTracked ? (
-      <Button bg="red" onClick={this.untrackMediaItem}>
-        untrack
-      </Button>
+      <FavButton onClick={this.untrackMediaItem}>
+        <Icon name="heart" />
+      </FavButton>
     ) : (
-      <Button bg="blue" onClick={this.trackMediaItem}>
-        track
-      </Button>
+      <FavButton onClick={this.trackMediaItem}>
+        <Icon name="heart-empty" />
+      </FavButton>
     );
   }
 }

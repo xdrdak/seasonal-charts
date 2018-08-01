@@ -1,5 +1,3 @@
-/// <reference path="./index.d.ts" />
-
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import Lister from './Lister';
@@ -32,7 +30,7 @@ const SeasonalShowList: React.SFC<ISeasonalShowListProps> = ({
     variables={{ season, seasonYear, format }}
   >
     {({ loading, error, data }) => {
-      if (loading) return '(￣▽￣)ノ';
+      if (loading) return '(￣▽￣)ノ ~loading~';
       if (error) return `Error!: ${error}`;
       return <Lister mediaItems={data.Page.media} />;
     }}

@@ -9,6 +9,7 @@ type MediaItem = {
   };
   nextAiringEpisode: {
     airingAt: number;
+    episode: number;
   };
   streamingEpisodes: Array<{
     site?: string;

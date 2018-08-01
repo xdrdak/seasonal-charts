@@ -1,7 +1,8 @@
 import * as React from 'react';
-import styled, { injectGlobal } from 'styled-components';
-import DevTools from 'mobx-react-devtools';
+import { injectGlobal } from 'styled-components';
+import { Container, Flex } from 'rebass';
 import SeasonalShowList from './components/SeasonalShowList';
+import TextLogo from './components/TextLogo';
 
 enum Season {
   Summer = 'SUMMER',
@@ -14,14 +15,12 @@ enum Format {
   tv = 'TV',
 }
 
-const Container = styled.div`
-  max-width: 1440px;
-  margin: 0 auto;
-`;
-
 class App extends React.Component {
   componentDidMount() {
     injectGlobal`
+      html, body {
+        background-color: #f4eff7;
+      }
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
@@ -30,16 +29,16 @@ class App extends React.Component {
 
   render() {
     return (
-      <Container>
-        <h1>Seasonal Charts</h1>
+      <Container mb={3} maxWidth={['1024px', '1440px']}>
+        <Flex justifyContent="center" my={4}>
+          <TextLogo />
+        </Flex>
 
         <SeasonalShowList
           season={Season.Summer}
           seasonYear={2018}
           format={Format.tv}
         />
-
-        <DevTools />
       </Container>
     );
   }

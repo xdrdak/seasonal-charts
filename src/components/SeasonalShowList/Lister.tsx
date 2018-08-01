@@ -4,10 +4,10 @@ import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { Box, Flex } from 'rebass';
 import { forceCheck } from 'react-lazyload';
-
 import ListerItem from './ListerItem';
 import BaseSelect from '../BaseSelect';
 import CardGrid from '../CardGrid';
+import { IMediaItemsStore } from '../../store/MediaItemsStore';
 
 enum FilterBy {
   Tracked = 'tracked',
@@ -25,7 +25,7 @@ enum SortType {
   Alphabetical = 'alphabetical',
 }
 
-const FormBox = styled(Box).attrs({ mb: 2 })``;
+const FormBox = styled(Box).attrs({ mb: 4 })``;
 
 function sortByAlphabetical(a: MediaItem, b: MediaItem) {
   return a.title.romaji.localeCompare(b.title.romaji);
@@ -72,7 +72,7 @@ interface State {
 }
 interface Props {
   mediaItems: Array<MediaItem>;
-  mediaItemStore?: any;
+  mediaItemStore?: IMediaItemsStore;
 }
 
 @inject('mediaItemStore')
