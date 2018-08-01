@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled, { injectGlobal } from 'styled-components';
+import { injectGlobal } from 'styled-components';
 import { Container, Flex, Group, Button } from 'rebass';
 import SeasonalShowList from './components/SeasonalShowList';
 import TextLogo from './components/TextLogo';
@@ -71,20 +71,8 @@ class App extends React.Component<any, AppState> {
     this.setState({ selectedSeason: seasonName });
   };
 
-  handleSummerClick = () => {
-    this.setSeason(Season.Summer);
-  };
-
-  handleWinterClick = () => {
-    this.setSeason(Season.Winter);
-  };
-
-  handleFallClick = () => {
-    this.setSeason(Season.Fall);
-  };
-
-  handleSpringClick = () => {
-    this.setSeason(Season.Spring);
+  setYear = (year: number) => {
+    this.setState({ selectedYear: year });
   };
 
   isSeason = (season: Season) => {
@@ -95,14 +83,6 @@ class App extends React.Component<any, AppState> {
     return this.state.selectedYear === year;
   };
 
-  setCurrentYear = () => {
-    this.setState({ selectedYear: this.currentYear });
-  };
-
-  setNextYear = () => {
-    this.setState({ selectedYear: this.currentYear + 1 });
-  };
-
   render() {
     return (
       <Container mb={3} maxWidth={['960px', '1024px', '1600px']}>
@@ -111,16 +91,17 @@ class App extends React.Component<any, AppState> {
         </Flex>
 
         <Flex justifyContent="center" my={4}>
+          {/* Move to another component */}
           <Group>
             <GroupButton
               selected={this.isYear(this.currentYear)}
-              onClick={this.setCurrentYear}
+              onClick={() => this.setYear(this.currentYear)}
             >
               {this.currentYear}
             </GroupButton>
             <GroupButton
               selected={this.isYear(this.currentYear + 1)}
-              onClick={this.setNextYear}
+              onClick={() => this.setYear(this.currentYear + 1)}
             >
               {this.currentYear + 1}
             </GroupButton>
@@ -128,29 +109,29 @@ class App extends React.Component<any, AppState> {
         </Flex>
 
         <Flex justifyContent="center" my={4}>
-          {/* Such garbage. Much wow.*/}
+          {/* Move to another component */}
           <Group>
             <GroupButton
               selected={this.isSeason(Season.Summer)}
-              onClick={this.handleSummerClick}
+              onClick={() => this.setSeason(Season.Summer)}
             >
               Summer
             </GroupButton>
             <GroupButton
               selected={this.isSeason(Season.Fall)}
-              onClick={this.handleFallClick}
+              onClick={() => this.setSeason(Season.Fall)}
             >
               Fall
             </GroupButton>
             <GroupButton
               selected={this.isSeason(Season.Winter)}
-              onClick={this.handleWinterClick}
+              onClick={() => this.setSeason(Season.Winter)}
             >
               Winter
             </GroupButton>
             <GroupButton
               selected={this.isSeason(Season.Spring)}
-              onClick={this.handleSpringClick}
+              onClick={() => this.setSeason(Season.Spring)}
             >
               Spring
             </GroupButton>
