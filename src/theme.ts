@@ -1,5 +1,5 @@
 const theme = {
-  breakpoints: [32, 48, 64],
+  breakpoints: ['32rem', '48rem', '64rem'],
   space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
   fontSizes: [12, 16, 20, 24, 36, 48, 80, 96],
   borderWidths: [0, 1, 2, 4, 8, 16, 32],

@@ -9,7 +9,7 @@ export interface IMediaItemsStore {
   dispose();
 }
 
-class MediaItemsStore implements IMediaItemsStore {
+class MediaItemStore implements IMediaItemsStore {
   @observable mediaItems: IObservableArray<number>;
   autoSaveDisposer: Function = null;
 
@@ -38,4 +38,4 @@ class MediaItemsStore implements IMediaItemsStore {
   }
 }
 
-export default MediaItemsStore;
+export default MediaItemStore;

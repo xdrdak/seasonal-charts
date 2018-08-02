@@ -11,6 +11,7 @@ import {
   Text,
   Box,
   Card,
+  BackgroundImage,
 } from 'rebass';
 
 import TrackButton from './TrackButton';
@@ -52,6 +53,37 @@ const CountdownLabel: React.SFC<CountdownLabelProps> = ({ timestamp }) => {
   );
 };
 
+interface RibbonDisplayerProps {
+  nextAiringEpisode?: {
+    episode: number;
+  };
+  streamingEpisodes?: Array<any>;
+  timestamp: number;
+  freshFor: number;
+}
+const RibbonDisplayer: React.SFC<RibbonDisplayerProps> = ({
+  nextAiringEpisode,
+  streamingEpisodes,
+  timestamp,
+  freshFor,
+}) => {
+  const { days } = countdownUntil(timestamp);
+  let hasNewEpisode: boolean = false;
+  if (nextAiringEpisode && streamingEpisodes.length) {
+    hasNewEpisode =
+      nextAiringEpisode.episode - streamingEpisodes.length >= 1 &&
+      days >= freshFor;
+  }
+
+  return (
+    hasNewEpisode && (
+      <Ribbon top="20px" left="-65px" lineHeight="20px">
+        New ep!
+      </Ribbon>
+    )
+  );
+};
+
 const AiringDate = ({ timestamp }) => {
   const localeString = new Date(timestamp).toLocaleDateString();
 
@@ -70,68 +102,68 @@ class ListerItem extends React.Component<Props> {
     const { mediaItem } = this.props;
     const { nextAiringEpisode, streamingEpisodes } = mediaItem;
 
-    // Ghetto as fuck starting from here... split this out into subcomponents bro
     const airingAtTimestamp =
       (nextAiringEpisode && nextAiringEpisode.airingAt * 1000) || null;
-    const { days } = countdownUntil(airingAtTimestamp);
-
-    let hasNewEpisode: boolean | number = false;
-    if (nextAiringEpisode && streamingEpisodes.length) {
-      hasNewEpisode =
-        (nextAiringEpisode.episode - streamingEpisodes.length > 1 &&
-          streamingEpisodes.length) ||
-        (nextAiringEpisode.episode - streamingEpisodes.length == 1 &&
-          days >= 5);
-    }
 
     return (
       <Card key={mediaItem.id} boxShadow={2}>
-        <RelativeHidden>
-          {hasNewEpisode && (
-            <Ribbon top="20px" left="-65px" lineHeight="20px">
-              New ep!
-            </Ribbon>
-          )}
-          <LazyLoad height={300}>
-            <AspectRatioImage imgUrl={mediaItem.coverImage.large} />
-          </LazyLoad>
-          {airingAtTimestamp && (
-            <Box mb={3}>
-              <Text fontSize={1} color="black-50">
-                <AiringDate timestamp={airingAtTimestamp} />
-              </Text>
-              <CountdownLabel timestamp={airingAtTimestamp} />
-            </Box>
-          )}
-          <Heading fontSize={2} mb={1}>
-            {mediaItem.title.romaji}
-          </Heading>
+        <LazyLoad height={300} once>
+          <RelativeHidden>
+            <RibbonDisplayer
+              freshFor={5}
+              timestamp={airingAtTimestamp}
+              nextAiringEpisode={nextAiringEpisode}
+              streamingEpisodes={streamingEpisodes}
+            />
+            <Flex flexDirection={['row', 'column']} alignItems={'center'}>
+              <BackgroundImage
+                width={['30%', '100%']}
+                ratio={1}
+                pb={[6, '100%']}
+                src={mediaItem.coverImage.large}
+              />
 
-          <Text fontSize={1} mb={3} fontWeight={'lighter'}>
-            <em>{mediaItem.title.english}</em>
-          </Text>
+              <Box width={['70%', '100%']} ml={[2, 0]}>
+                {airingAtTimestamp && (
+                  <Box mb={3}>
+                    <Text fontSize={1} color="black-50">
+                      <AiringDate timestamp={airingAtTimestamp} />
+                    </Text>
+                    <CountdownLabel timestamp={airingAtTimestamp} />
+                  </Box>
+                )}
+                <Heading fontSize={2} mb={1}>
+                  {mediaItem.title.romaji}
+                </Heading>
 
-          <Flex my={2} justifyContent="center" flexWrap="wrap">
-            {streamingEpisodes.map((episode, index, arr) => (
-              <div key={`${mediaItem.id}_${index}`}>
-                <EpisodeLinkCircle size="32px">
-                  <EpisodeLink
-                    color="white"
-                    href={episode.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {arr.length - index}
-                  </EpisodeLink>
-                </EpisodeLinkCircle>
-              </div>
-            ))}
-          </Flex>
+                <Text fontSize={1} mb={3} fontWeight={'lighter'}>
+                  <em>{mediaItem.title.english}</em>
+                </Text>
 
-          <Absolute top={5} right={5}>
-            <TrackButton id={this.props.mediaItem.id} />
-          </Absolute>
-        </RelativeHidden>
+                <Flex my={2} justifyContent="center" flexWrap="wrap">
+                  {streamingEpisodes.map((episode, index, arr) => (
+                    <div key={`${mediaItem.id}_${index}`}>
+                      <EpisodeLinkCircle size="32px">
+                        <EpisodeLink
+                          color="white"
+                          href={episode.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {arr.length - index}
+                        </EpisodeLink>
+                      </EpisodeLinkCircle>
+                    </div>
+                  ))}
+                </Flex>
+
+                <Absolute top={5} right={5}>
+                  <TrackButton id={this.props.mediaItem.id} />
+                </Absolute>
+              </Box>
+            </Flex>
+          </RelativeHidden>
+        </LazyLoad>
       </Card>
     );
   }
