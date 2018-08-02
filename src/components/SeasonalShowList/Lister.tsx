@@ -2,12 +2,16 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import { Box, Flex } from 'rebass';
+import { Box, Flex, Label } from 'rebass';
 import { forceCheck } from 'react-lazyload';
 import ListerItem from './ListerItem';
 import BaseSelect from '../BaseSelect';
 import CardGrid from '../CardGrid';
 import { IMediaItemsStore } from '../../store/MediaItemsStore';
+
+const Select = styled(BaseSelect)`
+  width: 100%;
+`;
 
 enum FilterBy {
   Tracked = 'tracked',
@@ -24,8 +28,6 @@ enum SortType {
   Airing = 'airing',
   Alphabetical = 'alphabetical',
 }
-
-const FormBox = styled(Box).attrs({ mb: 4 })``;
 
 function sortByAlphabetical(a: MediaItem, b: MediaItem) {
   return a.title.romaji.localeCompare(b.title.romaji);
@@ -138,10 +140,10 @@ class Lister extends React.Component<Props, State> {
 
     return (
       <div>
-        <Flex justifyContent="space-between">
-          <FormBox>
-            <label htmlFor="sortType">Sort By:&nbsp;</label>
-            <BaseSelect
+        <Flex flexDirection={['column', 'row']} mb={4}>
+          <Box mb={[3, 0]} mr={[0, 3]}>
+            <Label htmlFor="sortType">Sort By:&nbsp;</Label>
+            <Select
               id="sortType"
               name="sortType"
               onChange={this.changeSortType}
@@ -149,9 +151,12 @@ class Lister extends React.Component<Props, State> {
             >
               <option value={SortType.Alphabetical}>Alphabetical</option>
               <option value={SortType.Airing}>Airing Date</option>
-            </BaseSelect>
+            </Select>
+          </Box>
 
-            <BaseSelect
+          <Box mb={[3, 0]}>
+            <Label htmlFor="sortOrdering">Order:&nbsp;</Label>
+            <Select
               id="sortOrdering"
               name="sortOrdering"
               onChange={this.changeSortOrder}
@@ -159,11 +164,11 @@ class Lister extends React.Component<Props, State> {
             >
               <option value={SortOrder.Ascending}>Ascending</option>
               <option value={SortOrder.Descending}>Descending</option>
-            </BaseSelect>
-          </FormBox>
-
-          <FormBox>
-            <BaseSelect
+            </Select>
+          </Box>
+          <Box ml={[0, 'auto']} mb={[3, 0]}>
+            <Label htmlFor="filterBy">Filter by:&nbsp;</Label>
+            <Select
               id="filterBy"
               name="filterBy"
               onChange={this.changeFilterType}
@@ -172,8 +177,8 @@ class Lister extends React.Component<Props, State> {
               <option value={FilterBy.None}>All shows</option>
               <option value={FilterBy.Tracked}>Tracked Only</option>
               <option value={FilterBy.Untracked}>Untracked Only</option>
-            </BaseSelect>
-          </FormBox>
+            </Select>
+          </Box>
         </Flex>
         {sortedMediaItems.length ? (
           <CardGrid>

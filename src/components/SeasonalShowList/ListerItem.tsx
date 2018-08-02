@@ -15,7 +15,6 @@ import {
 } from 'rebass';
 
 import TrackButton from './TrackButton';
-import AspectRatioImage from '../AspectRatioImage';
 import Ribbon from '../CornerRibbon';
 import { countdownUntil } from '../../utils/time-utils';
 
