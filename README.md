@@ -13,4 +13,4 @@ ferris-nyan.surge.sh
 ---
 
 ## On the subject of bundle size.
-It's god awfully huge for something relatively simple. Pulling out the gql parser should reduce the size.
+It's god awfully huge for something relatively simple. 
