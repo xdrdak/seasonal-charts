@@ -1,33 +1,15 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import { Box, Flex, Label } from 'rebass';
+import { Box, Flex } from 'rebass';
 import { forceCheck } from 'react-lazyload';
+
 import AnimeCard from './AnimeCard';
-import BaseSelect from '../BaseSelect';
+import { SortOrder, SelectSortOrder } from './SelectSortOrder';
+import { FilterBy, SelectFilterBy } from './SelectFilterBy';
+import { SortType, SelectSortType } from './SelectSortType';
 import Grid from '../Grid';
 import { IMediaItemsStore } from '../../store/MediaItemsStore';
-
-const Select = styled(BaseSelect)`
-  width: 100%;
-`;
-
-enum FilterBy {
-  Tracked = 'tracked',
-  Untracked = 'untracked',
-  None = 'none',
-}
-
-enum SortOrder {
-  Ascending = 'ascending',
-  Descending = 'descending',
-}
-
-enum SortType {
-  Airing = 'airing',
-  Alphabetical = 'alphabetical',
-}
 
 function sortByAlphabetical(a: MediaItem, b: MediaItem) {
   return a.title.romaji.localeCompare(b.title.romaji);
@@ -131,58 +113,41 @@ class Lister extends React.Component<Props, State> {
     return this.props.mediaItems;
   }
 
-  render() {
-    const sortedMediaItems = sortingStrategy(
+  get sortedMediaItems(): Array<MediaItem> {
+    return sortingStrategy(
       this.filteredMediaItems,
       this.state.sortType,
       this.state.sortOrder,
     );
+  }
 
+  render() {
     return (
       <div>
         <Flex flexDirection={['column', 'row']} mb={4}>
           <Box mb={[3, 0]} mr={[0, 3]}>
-            <Label htmlFor="sortType">Sort By:&nbsp;</Label>
-            <Select
-              id="sortType"
-              name="sortType"
+            <SelectSortType
               onChange={this.changeSortType}
               value={this.state.sortType}
-            >
-              <option value={SortType.Alphabetical}>Alphabetical</option>
-              <option value={SortType.Airing}>Airing Date</option>
-            </Select>
+            />
           </Box>
 
           <Box mb={[3, 0]}>
-            <Label htmlFor="sortOrdering">Order:&nbsp;</Label>
-            <Select
-              id="sortOrdering"
-              name="sortOrdering"
+            <SelectSortOrder
               onChange={this.changeSortOrder}
               value={this.state.sortOrder}
-            >
-              <option value={SortOrder.Ascending}>Ascending</option>
-              <option value={SortOrder.Descending}>Descending</option>
-            </Select>
+            />
           </Box>
           <Box ml={[0, 'auto']} mb={[3, 0]}>
-            <Label htmlFor="filterBy">Filter by:&nbsp;</Label>
-            <Select
-              id="filterBy"
-              name="filterBy"
+            <SelectFilterBy
               onChange={this.changeFilterType}
               value={this.state.filter}
-            >
-              <option value={FilterBy.None}>All shows</option>
-              <option value={FilterBy.Tracked}>Tracked Only</option>
-              <option value={FilterBy.Untracked}>Untracked Only</option>
-            </Select>
+            />
           </Box>
         </Flex>
-        {sortedMediaItems.length ? (
+        {this.sortedMediaItems.length ? (
           <Grid>
-            {sortedMediaItems.map(media => (
+            {this.sortedMediaItems.map(media => (
               <AnimeCard key={media.id} mediaItem={media} />
             ))}
           </Grid>

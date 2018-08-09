@@ -141,18 +141,19 @@ class AnimeCard extends React.Component<Props> {
 
                 <Flex my={2} justifyContent="center" flexWrap="wrap">
                   {streamingEpisodes.map((episode, index, arr) => (
-                    <div key={`${mediaItem.id}_${index}`}>
-                      <EpisodeLinkCircle size="32px">
-                        <EpisodeLink
-                          color="white"
-                          href={episode.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {arr.length - index}
-                        </EpisodeLink>
-                      </EpisodeLinkCircle>
-                    </div>
+                    <EpisodeLinkCircle
+                      size="32px"
+                      key={`${mediaItem.id}_${index}`}
+                    >
+                      <EpisodeLink
+                        color="white"
+                        href={episode.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {arr.length - index}
+                      </EpisodeLink>
+                    </EpisodeLinkCircle>
                   ))}
                 </Flex>
 
