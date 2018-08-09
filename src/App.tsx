@@ -3,13 +3,7 @@ import { injectGlobal } from 'styled-components';
 import { Container, Flex, Group, Button } from 'rebass';
 import SeasonalShowList from './components/SeasonalShowList';
 import TextLogo from './components/TextLogo';
-
-enum Season {
-  Summer = 'SUMMER',
-  Winter = 'WINTER',
-  Spring = 'SPRING',
-  Fall = 'FALL',
-}
+import { Season, getCurrentSeason } from './utils/seasons-utils';
 
 enum Format {
   tv = 'TV',
@@ -43,7 +37,7 @@ interface AppState {
 class App extends React.Component<any, AppState> {
   currentYear: number = new Date().getUTCFullYear();
   state = {
-    selectedSeason: Season.Summer,
+    selectedSeason: getCurrentSeason(),
     selectedYear: this.currentYear,
   };
 

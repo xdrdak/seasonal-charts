@@ -4,9 +4,9 @@ import { computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { Box, Flex, Label } from 'rebass';
 import { forceCheck } from 'react-lazyload';
-import ListerItem from './ListerItem';
+import AnimeCard from './AnimeCard';
 import BaseSelect from '../BaseSelect';
-import CardGrid from '../CardGrid';
+import Grid from '../Grid';
 import { IMediaItemsStore } from '../../store/MediaItemsStore';
 
 const Select = styled(BaseSelect)`
@@ -181,11 +181,11 @@ class Lister extends React.Component<Props, State> {
           </Box>
         </Flex>
         {sortedMediaItems.length ? (
-          <CardGrid>
+          <Grid>
             {sortedMediaItems.map(media => (
-              <ListerItem key={media.id} mediaItem={media} />
+              <AnimeCard key={media.id} mediaItem={media} />
             ))}
-          </CardGrid>
+          </Grid>
         ) : (
           "	╮(￣～￣)╭ There's nothing here!"
         )}

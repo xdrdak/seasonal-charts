@@ -92,7 +92,7 @@ const AiringDate = ({ timestamp }) => {
 interface Props {
   mediaItem: MediaItem;
 }
-class ListerItem extends React.Component<Props> {
+class AnimeCard extends React.Component<Props> {
   constructor(props) {
     super(props);
   }
@@ -168,4 +168,4 @@ class ListerItem extends React.Component<Props> {
   }
 }
 
-export default ListerItem;
+export default AnimeCard;

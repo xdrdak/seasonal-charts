@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const CardGrid = styled.div`
+const Grid = styled.div`
   display: grid;
   grid-gap: 35px;
   grid-template-columns: repeat(1, 1fr);
@@ -22,4 +22,4 @@ const CardGrid = styled.div`
   }
 `;
 
-export default CardGrid;
+export default Grid;

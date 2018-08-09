@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 
 export const QUERY_SEASONAL_SHOWS = gql`
   query($season: MediaSeason, $seasonYear: Int, $format: MediaFormat) {
