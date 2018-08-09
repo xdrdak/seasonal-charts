@@ -6,6 +6,7 @@
   "scripts": {
     "start": "parcel index.html",
     "build": "rimraf ./dist/* && parcel build index.html",
+    "publish": "surge ./dist https://ferris-nyan.surge.sh",
     "flush": "rimraf ./.cache && echo 'cache cleared'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
