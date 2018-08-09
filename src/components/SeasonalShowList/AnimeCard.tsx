@@ -30,6 +30,7 @@ const EpisodeLinkCircle = styled(Circle)`
   &:hover {
     background-color: #85b7f9;
   }
+  padding-bottom: 0.25rem;
 `;
 
 const RelativeHidden = styled(Relative)`
@@ -105,7 +106,7 @@ class AnimeCard extends React.Component<Props> {
       (nextAiringEpisode && nextAiringEpisode.airingAt * 1000) || null;
 
     return (
-      <Card key={mediaItem.id} boxShadow={2}>
+      <Card key={mediaItem.id} boxShadow={3} p={0}>
         <LazyLoad height={300} once>
           <RelativeHidden>
             <RibbonDisplayer
@@ -122,7 +123,7 @@ class AnimeCard extends React.Component<Props> {
                 src={mediaItem.coverImage.large}
               />
 
-              <Box width={['70%', '100%']} ml={[2, 0]}>
+              <Box width={['70%', '100%']} ml={[2, 0]} p={[0, 3]}>
                 {airingAtTimestamp && (
                   <Box mb={3}>
                     <Text fontSize={1} color="black-50">
